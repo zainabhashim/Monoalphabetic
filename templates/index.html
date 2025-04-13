@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Monoalphabetic Cipher</title>
+  <style>
+    :root {
+      --primary: #e91e63;
+      --background: #fff0f6;
+      --card: #ffffff;
+      --text: #4a004f;
+      --input-bg: #ffe0eb;
+      --button-hover: #c2185b;
+      --border: #f8bbd0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--background);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 30px 15px;
+    }
+
+    .card {
+      background: var(--card);
+      width: 100%;
+      max-width: 600px;
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 12px 30px rgba(233, 30, 99, 0.2);
+      border: 3px solid var(--border);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 25px;
+      font-size: 28px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 15px;
+      border: 2px solid var(--border);
+      background-color: var(--input-bg);
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .show-btn-container {
+      text-align: right;
+      margin-top: 5px;
+    }
+
+    .show-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .buttons button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .buttons button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .output {
+      background-color: #fce4ec;
+      padding: 18px;
+      border-radius: 15px;
+      margin-top: 30px;
+      border: 2px dashed var(--primary);
+    }
+
+    .output p {
+      margin-top: 10px;
+      word-break: break-word;
+    }
+  </style>
+  <script>
+    window.onload = function () {
+      const keyInput = document.getElementById('keymap');
+      if (!keyInput.value.trim()) {
+        const letters = "abcdefghijklmnopqrstuvwxyz".split('');
+        const shuffled = [...letters].sort(() => Math.random() - 0.5);
+        const keyPairs = letters.map((l, i) => `${l}:${shuffled[i]}`);
+        keyInput.value = keyPairs.join(', ');
+      }
+    };
+
+    function toggleKey() {
+      const input = document.getElementById('keymap');
+      const btn = document.getElementById('toggleKeyBtn');
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = 'Hide Key';
+      } else {
+        input.type = 'password';
+        btn.textContent = 'Show Key';
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="card">
+    <h1>Monoalphabetic Cipher</h1>
+    <form method="POST">
+      <label for="plaintext">💌 Enter Text</label>
+      <textarea name="plaintext" placeholder="Type your message...">{{ plaintext }}</textarea>
+
+      <label for="keymap">🔐 Key Map</label>
+      <input type="password" id="keymap" name="keymap" value="{{ keymap }}" readonly />
+
+      <div class="show-btn-container">
+        <button type="button" class="show-btn" id="toggleKeyBtn" onclick="toggleKey()">Show Key</button>
+      </div>
+
+      <div class="buttons">
+        <button type="submit" name="action" value="encrypt">🔒 Encrypt</button>
+        <button type="submit" name="action" value="decrypt">🔓 Decrypt</button>
+      </div>
+
+      {% if result %}
+      <!-- Move "Result" label above the output textarea -->
+      <label for="result">🌸 Result</label>
+      <textarea id="result" readonly>{{ result }}</textarea>
+      {% endif %}
+    </form>
+  </div>
+</body>
+</html>
