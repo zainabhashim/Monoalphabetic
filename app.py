@@ -45,10 +45,10 @@ def index():
     if request.method == 'POST':
         action = request.form.get('action', 'encrypt')
         keymap = request.form.get('keymap', '')
+        previous_action = request.form.get('previous_action', 'encrypt')
         
-        # Auto-swap text when changing action
-        current_result = request.form.get('result', '')
-        plaintext = current_result if action != request.form.get('previous_action', '') else request.form.get('plaintext', '')
+        # نقل النص عند تغيير الإجراء
+        plaintext = request.form.get('result', '') if action != previous_action else request.form.get('plaintext', '')
         
         try:
             key_dict = parse_key_string(keymap)
