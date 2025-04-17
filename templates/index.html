@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monoalphabetic Cipher</title>
   <style>
+    /* نفس التنسيقات السابقة */
     :root {
       --primary: #e91e63;
       --background: #fff0f6;
@@ -199,7 +200,7 @@
       <label for="plaintext">
         {{ '💌 Plaintext' if action == 'encrypt' else '🔓 Ciphertext' }}
       </label>
-      <textarea name="plaintext" placeholder="{{ 'Enter text to encrypt...' if action == 'encrypt' else 'Enter text to decrypt...' }}">{{ plaintext }}</textarea>
+      <textarea name="plaintext" id="plaintext" placeholder="{{ 'Enter text to encrypt...' if action == 'encrypt' else 'Enter text to decrypt...' }}">{{ plaintext }}</textarea>
 
       <label for="keymap">🔐 Cipher Key</label>
       <input type="password" id="keymap" name="keymap" value="{{ keymap }}" readonly>
@@ -209,14 +210,14 @@
       </div>
 
       <div class="buttons">
-        <button type="submit">🚀 Process</button>
+        <button type="submit" id="processButton">🚀 Process</button>
       </div>
 
       {% if result %}
       <label for="result">
         {{ '🌸 Ciphertext' if action == 'encrypt' else '🌸 Decrypted Text' }}
       </label>
-      <textarea id="result" readonly>{{ result }}</textarea>
+      <textarea id="result" name="result" readonly>{{ result }}</textarea>
       {% endif %}
     </form>
   </div>
