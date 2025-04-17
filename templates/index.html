@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Monoalphabetic Cipher</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>شيفرة أحادية الأبجدية</title>
   <style>
     :root {
       --primary: #e91e63;
@@ -56,8 +56,7 @@
       margin-bottom: 8px;
     }
 
-    textarea,
-    input {
+    textarea, input {
       width: 100%;
       padding: 14px;
       border-radius: 15px;
@@ -73,7 +72,7 @@
     }
 
     .show-btn-container {
-      text-align: right;
+      text-align: left;
       margin-top: 5px;
     }
 
@@ -90,9 +89,7 @@
     .buttons {
       display: flex;
       justify-content: center;
-      gap: 15px;
       margin-top: 25px;
-      flex-wrap: wrap;
     }
 
     .buttons button {
@@ -105,10 +102,37 @@
       font-weight: bold;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      width: 200px;
     }
 
     .buttons button:hover {
       background-color: var(--button-hover);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin: 25px 0;
+      justify-content: center;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .radio-option input {
+      width: auto;
+      accent-color: var(--primary);
+    }
+
+    .radio-option label {
+      margin: 0;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--primary);
     }
 
     .output {
@@ -118,14 +142,9 @@
       margin-top: 30px;
       border: 2px dashed var(--primary);
     }
-
-    .output p {
-      margin-top: 10px;
-      word-break: break-word;
-    }
   </style>
   <script>
-    window.onload = function () {
+    window.onload = function() {
       const keyInput = document.getElementById('keymap');
       if (!keyInput.value.trim()) {
         const letters = "abcdefghijklmnopqrstuvwxyz".split('');
@@ -140,42 +159,48 @@
       const btn = document.getElementById('toggleKeyBtn');
       if (input.type === 'password') {
         input.type = 'text';
-        btn.textContent = 'Hide Key';
+        btn.textContent = 'إخفاء المفتاح';
       } else {
         input.type = 'password';
-        btn.textContent = 'Show Key';
+        btn.textContent = 'إظهار المفتاح';
       }
     }
   </script>
 </head>
 <body>
   <div class="card">
-    <h1>Monoalphabetic Cipher</h1>
+    <h1>شيفرة أحادية الأبجدية</h1>
     <form method="POST">
+      <div class="radio-group">
+        <div class="radio-option">
+          <input type="radio" id="encrypt" name="action" value="encrypt" {{ 'checked' if action == 'encrypt' }}>
+          <label for="encrypt">🔒 تشفير</label>
+        </div>
+        <div class="radio-option">
+          <input type="radio" id="decrypt" name="action" value="decrypt" {{ 'checked' if action == 'decrypt' }}>
+          <label for="decrypt">🔓 فك التشفير</label>
+        </div>
+      </div>
+
       <label for="plaintext">
-        {% if action == 'encrypt' %}
-          💌 نص واضح للتشفير
-        {% else %}
-          🔓 نص مشفر للفك
-        {% endif %}
+        {{ '💌 نص واضح' if action == 'encrypt' else '🔓 نص مشفر' }}
       </label>
-      <textarea name="plaintext" placeholder="{% if action == 'encrypt' %}أدخل النص هنا...{% else %}الصق النص المشفر هنا...{% endif %}">{{ plaintext }}</textarea>
+      <textarea name="plaintext" placeholder="{{ 'أدخل النص للتشفير...' if action == 'encrypt' else 'أدخل النص لفك التشفير...' }}">{{ plaintext }}</textarea>
 
       <label for="keymap">🔐 مفتاح التشفير</label>
-      <input type="password" id="keymap" name="keymap" value="{{ keymap }}" readonly />
+      <input type="password" id="keymap" name="keymap" value="{{ keymap }}" readonly>
 
       <div class="show-btn-container">
-        <button type="button" class="show-btn" id="toggleKeyBtn" onclick="toggleKey()">Show Key</button>
+        <button type="button" class="show-btn" id="toggleKeyBtn" onclick="toggleKey()">إظهار المفتاح</button>
       </div>
 
       <div class="buttons">
-        <button type="submit" name="action" value="encrypt">🔒 تشفير</button>
-        <button type="submit" name="action" value="decrypt">🔓 فك التشفير</button>
+        <button type="submit">🚀 تنفيذ</button>
       </div>
 
       {% if result %}
       <label for="result">
-        🌸 {% if action == 'encrypt' %}النص المشفر{% else %}النص المفكوك{% endif %}
+        {{ '🌸 النص المشفر' if action == 'encrypt' else '🌸 النص المفكوك' }}
       </label>
       <textarea id="result" readonly>{{ result }}</textarea>
       {% endif %}
