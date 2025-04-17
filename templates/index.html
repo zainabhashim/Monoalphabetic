@@ -152,10 +152,16 @@
   <div class="card">
     <h1>Monoalphabetic Cipher</h1>
     <form method="POST">
-      <label for="plaintext">💌 Enter Text</label>
-      <textarea name="plaintext" placeholder="Type your message...">{{ plaintext }}</textarea>
+      <label for="plaintext">
+        {% if action == 'encrypt' %}
+          💌 نص واضح للتشفير
+        {% else %}
+          🔓 نص مشفر للفك
+        {% endif %}
+      </label>
+      <textarea name="plaintext" placeholder="{% if action == 'encrypt' %}أدخل النص هنا...{% else %}الصق النص المشفر هنا...{% endif %}">{{ plaintext }}</textarea>
 
-      <label for="keymap">🔐 Key Map</label>
+      <label for="keymap">🔐 مفتاح التشفير</label>
       <input type="password" id="keymap" name="keymap" value="{{ keymap }}" readonly />
 
       <div class="show-btn-container">
@@ -163,13 +169,14 @@
       </div>
 
       <div class="buttons">
-        <button type="submit" name="action" value="encrypt">🔒 Encrypt</button>
-        <button type="submit" name="action" value="decrypt">🔓 Decrypt</button>
+        <button type="submit" name="action" value="encrypt">🔒 تشفير</button>
+        <button type="submit" name="action" value="decrypt">🔓 فك التشفير</button>
       </div>
 
       {% if result %}
-      <!-- Move "Result" label above the output textarea -->
-      <label for="result">🌸 Result</label>
+      <label for="result">
+        🌸 {% if action == 'encrypt' %}النص المشفر{% else %}النص المفكوك{% endif %}
+      </label>
       <textarea id="result" readonly>{{ result }}</textarea>
       {% endif %}
     </form>
