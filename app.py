@@ -5,7 +5,6 @@ import random
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret123'
 
-# توليد مفتاح عشوائي عند كل تشغيل
 def generate_key():
     letters = list("abcdefghijklmnopqrstuvwxyz")
     shuffled = letters.copy()
@@ -41,30 +40,33 @@ def index():
     plaintext = ''
     result = ''
     keymap = ''
-    action = 'encrypt'  # القيمة الافتراضية
+    action = 'encrypt'
 
     if request.method == 'POST':
-        plaintext = request.form.get('plaintext', '')
-        keymap = request.form.get('keymap', '')
         action = request.form.get('action', 'encrypt')
-
+        keymap = request.form.get('keymap', '')
+        
+        # Auto-swap text when changing action
+        current_result = request.form.get('result', '')
+        plaintext = current_result if action != request.form.get('previous_action', '') else request.form.get('plaintext', '')
+        
         try:
             key_dict = parse_key_string(keymap)
             if action == 'decrypt':
                 key_dict = invert_key(key_dict)
             result = mono_encrypt(plaintext, key_dict)
         except Exception as e:
-            result = f"⚠️ خطأ في المفتاح: {e}"
+            result = f"⚠️ Key Error: {e}"
 
     else:
         generated_key = generate_key()
         keymap = ', '.join(f'{k}:{v}' for k, v in generated_key.items())
 
-    return render_template('index.html', 
-                           plaintext=plaintext,
-                           result=result,
-                           keymap=keymap,
-                           action=action)
+    return render_template('index.html',
+                         plaintext=plaintext,
+                         result=result,
+                         keymap=keymap,
+                         action=action)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
