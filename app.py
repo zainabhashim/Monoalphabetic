@@ -33,28 +33,38 @@ def mono_encrypt(text, key_map):
             result += char
     return result
 
+def invert_key(key_map):
+    return {v: k for k, v in key_map.items()}
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     plaintext = ''
     result = ''
     keymap = ''
+    action = 'encrypt'  # القيمة الافتراضية
 
     if request.method == 'POST':
         plaintext = request.form.get('plaintext', '')
         keymap = request.form.get('keymap', '')
+        action = request.form.get('action', 'encrypt')
 
         try:
             key_dict = parse_key_string(keymap)
+            if action == 'decrypt':
+                key_dict = invert_key(key_dict)
             result = mono_encrypt(plaintext, key_dict)
         except Exception as e:
-            result = f"⚠️ Error in key: {e}"
+            result = f"⚠️ خطأ في المفتاح: {e}"
 
     else:
-        # عند أول تحميل، يولد مفتاح جديد
         generated_key = generate_key()
         keymap = ', '.join(f'{k}:{v}' for k, v in generated_key.items())
 
-    return render_template('index.html', plaintext=plaintext, result=result, keymap=keymap)
+    return render_template('index.html', 
+                           plaintext=plaintext,
+                           result=result,
+                           keymap=keymap,
+                           action=action)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
