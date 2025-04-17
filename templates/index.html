@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>شيفرة أحادية الأبجدية</title>
+  <title>Monoalphabetic Cipher</title>
   <style>
     :root {
       --primary: #e91e63;
@@ -72,7 +72,7 @@
     }
 
     .show-btn-container {
-      text-align: left;
+      text-align: right;
       margin-top: 5px;
     }
 
@@ -152,6 +152,9 @@
         const keyPairs = letters.map((l, i) => `${l}:${shuffled[i]}`);
         keyInput.value = keyPairs.join(', ');
       }
+      
+      // Auto-focus input field
+      document.querySelector('textarea[name="plaintext"]').focus();
     };
 
     function toggleKey() {
@@ -159,48 +162,59 @@
       const btn = document.getElementById('toggleKeyBtn');
       if (input.type === 'password') {
         input.type = 'text';
-        btn.textContent = 'إخفاء المفتاح';
+        btn.textContent = 'Hide Key';
       } else {
         input.type = 'password';
-        btn.textContent = 'إظهار المفتاح';
+        btn.textContent = 'Show Key';
+      }
+    }
+
+    function handleActionChange() {
+      const resultTextarea = document.querySelector('textarea#result');
+      if (resultTextarea && resultTextarea.value) {
+        document.querySelector('textarea[name="plaintext"]').value = resultTextarea.value;
       }
     }
   </script>
 </head>
 <body>
   <div class="card">
-    <h1>شيفرة أحادية الأبجدية</h1>
+    <h1>Monoalphabetic Cipher</h1>
     <form method="POST">
       <div class="radio-group">
         <div class="radio-option">
-          <input type="radio" id="encrypt" name="action" value="encrypt" {{ 'checked' if action == 'encrypt' }}>
-          <label for="encrypt">🔒 تشفير</label>
+          <input type="radio" id="encrypt" name="action" value="encrypt" 
+                 {{ 'checked' if action == 'encrypt' }} onchange="handleActionChange()">
+          <label for="encrypt">🔒 Encrypt</label>
         </div>
         <div class="radio-option">
-          <input type="radio" id="decrypt" name="action" value="decrypt" {{ 'checked' if action == 'decrypt' }}>
-          <label for="decrypt">🔓 فك التشفير</label>
+          <input type="radio" id="decrypt" name="action" value="decrypt" 
+                 {{ 'checked' if action == 'decrypt' }} onchange="handleActionChange()">
+          <label for="decrypt">🔓 Decrypt</label>
         </div>
       </div>
 
       <label for="plaintext">
-        {{ '💌 نص واضح' if action == 'encrypt' else '🔓 نص مشفر' }}
+        {{ '💌 Plaintext' if action == 'encrypt' else '🔓 Ciphertext' }}
       </label>
-      <textarea name="plaintext" placeholder="{{ 'أدخل النص للتشفير...' if action == 'encrypt' else 'أدخل النص لفك التشفير...' }}">{{ plaintext }}</textarea>
+      <textarea name="plaintext" placeholder="{{ 'Enter text to encrypt...' if action == 'encrypt' else 'Enter text to decrypt...' }}">{{ plaintext }}</textarea>
 
-      <label for="keymap">🔐 مفتاح التشفير</label>
+      <label for="keymap">🔐 Cipher Key</label>
       <input type="password" id="keymap" name="keymap" value="{{ keymap }}" readonly>
 
       <div class="show-btn-container">
-        <button type="button" class="show-btn" id="toggleKeyBtn" onclick="toggleKey()">إظهار المفتاح</button>
+        <button type="button" class="show-btn" id="toggleKeyBtn" onclick="toggleKey()">Show Key</button>
       </div>
 
+      <input type="hidden" name="previous_action" value="{{ action }}">
+
       <div class="buttons">
-        <button type="submit">🚀 تنفيذ</button>
+        <button type="submit">🚀 Process</button>
       </div>
 
       {% if result %}
       <label for="result">
-        {{ '🌸 النص المشفر' if action == 'encrypt' else '🌸 النص المفكوك' }}
+        {{ '🌸 Ciphertext' if action == 'encrypt' else '🌸 Decrypted Text' }}
       </label>
       <textarea id="result" readonly>{{ result }}</textarea>
       {% endif %}
