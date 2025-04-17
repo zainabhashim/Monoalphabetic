@@ -47,10 +47,12 @@ def index():
         keymap = request.form.get('keymap', '')
         previous_action = request.form.get('previous_action', 'encrypt')
         
-        # التعديل الحاسم هنا: استخدام النص الحالي إذا لم يتغير الإجراء
-        plaintext = request.form.get('plaintext', '')
-        if action != previous_action and 'result' in request.form:
+        # التعديل الحاسم هنا
+        if action != previous_action:
             plaintext = request.form.get('result', '')
+            result = ''  # إفراغ النتيجة عند تغيير الإجراء
+        else:
+            plaintext = request.form.get('plaintext', '')
         
         try:
             key_dict = parse_key_string(keymap)
