@@ -50,7 +50,6 @@ def index():
         # التعديل الحاسم هنا
         if action != previous_action:
             plaintext = request.form.get('result', '')
-            result = ''  # إفراغ النتيجة عند تغيير الإجراء
         else:
             plaintext = request.form.get('plaintext', '')
         
