@@ -152,8 +152,6 @@
         const keyPairs = letters.map((l, i) => `${l}:${shuffled[i]}`);
         keyInput.value = keyPairs.join(', ');
       }
-      
-      // Auto-focus input field
       document.querySelector('textarea[name="plaintext"]').focus();
     };
 
@@ -170,10 +168,12 @@
     }
 
     function handleActionChange() {
-      const resultTextarea = document.querySelector('textarea#result');
+      const resultTextarea = document.getElementById('result');
+      const plainTextarea = document.querySelector('textarea[name="plaintext"]');
       if (resultTextarea && resultTextarea.value) {
-        document.querySelector('textarea[name="plaintext"]').value = resultTextarea.value;
+        plainTextarea.value = resultTextarea.value;
       }
+      plainTextarea.focus();
     }
   </script>
 </head>
@@ -181,6 +181,8 @@
   <div class="card">
     <h1>Monoalphabetic Cipher</h1>
     <form method="POST">
+      <input type="hidden" name="previous_action" value="{{ action }}">
+      
       <div class="radio-group">
         <div class="radio-option">
           <input type="radio" id="encrypt" name="action" value="encrypt" 
@@ -205,8 +207,6 @@
       <div class="show-btn-container">
         <button type="button" class="show-btn" id="toggleKeyBtn" onclick="toggleKey()">Show Key</button>
       </div>
-
-      <input type="hidden" name="previous_action" value="{{ action }}">
 
       <div class="buttons">
         <button type="submit">🚀 Process</button>
